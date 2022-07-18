@@ -64,7 +64,7 @@ table {
   border: 1px solid #ccc;
   font-size: 14px;
   background-color: white;
-  padding: 0px;
+  padding: 0px 5px;
   margin-top: 3px;
   border-radius: 3px;
   transition: width 0.4s ease-in-out;

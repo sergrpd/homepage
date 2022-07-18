@@ -23,46 +23,35 @@
         </a>
 
         <div class="toolbar">
-          <div class="filter">
+          <label class="filter">
             <span>Sort by date:</span>
 
-            <div>
-              <select data-sort="date" class="input_field">
-                <option disabled selected value>--</option>
-                <option value="true">From new to old</option>
-                <option value="false">From old to new</option>
-              </select>
+            <select data-sort="date" class="input_field">
+              <option value selected>--</option>
+              <option value="asc">From new to old</option>
+              <option value="desc">From old to new</option>
+            </select>
+          </label>
 
-              <button class="sort_button" type="button">Apply</button>
-            </div>
-          </div>
-
-          <div class="filter">
+          <label class="filter">
             <span>Sort by episodes:</span>
 
-            <div>
-              <select data-sort="episodes" class="input_field">
-                <option disabled selected value>--</option>
-                <option value="true">From min to max</option>
-                <option value="false">From max to min</option>
-              </select>
+            <select data-sort="episodes" class="input_field">
+              <option value selected>--</option>
+              <option value="asc">From min to max</option>
+              <option value="desc">From max to min</option>
+            </select>
+          </label>
 
-              <button class="sort_button" type="button">Apply</button>
-            </div>
-          </div>
-
-          <div class="filter">
+          <label class="filter">
             <span>Quick search:</span>
 
-            <div>
-              <input
-                type="text"
-                class="input_field search"
-                placeholder="Search..."
-              />
-            </div>
-          </div>
-
+            <input
+              type="text"
+              class="input_field search"
+              placeholder="Search..."
+            />
+          </label>
         </div>
       </div>
 

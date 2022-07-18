@@ -16,6 +16,7 @@ const characterTemplate = ({
       item.replaceAll('https://rickandmortyapi.com/api/episode/', '')
     )
     .join(', ');
+  const createdOn = new Date(created).toLocaleDateString('uk-UA');
 
   return `	  
     <article class="character-card" data-id=${id}>
@@ -35,7 +36,7 @@ const characterTemplate = ({
               <div class="character-info-item">Status: ${status}</div>
               <div class="character-info-item">Origin: <a href="${origin.url}">${origin.name}</a></div>
               <div class="character-info-item">Last known location: <a href="${location.url}">${location.name}</a></div>
-              <div class="character-info-item">Created on: ${created}</div>
+              <div class="character-info-item">Created on: ${createdOn}</div>
               <div class="character-info-item"><a href="${url}">Character Page</a></div>
             </div>
           </td>
