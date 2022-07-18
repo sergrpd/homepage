@@ -1,17 +1,22 @@
 import characterTemplate from './characterTemplate.js';
 
+/** references to the DOM elements */
 const refs = {
   window,
   charactersList: document.querySelector('.characters'),
   topButton: document.querySelector('.top-button'),
   loader: document.querySelector('.loader'),
+  inputSortByDate: document.querySelector('select[data-sort="date"]'),
+  inputSortByEpisode: document.querySelector('select[data-sort="episodes"]'),
   inputSearch: document.querySelector('.search'),
 };
 
 let items = [];
 let query = '';
+let sortByDateValue = '';
+let sortByEpisodeValue = '';
 let page = 1;
-let pages = 0;
+let totalPages = 0;
 let isLoading = false;
 
 // -------------- functions ----------------
@@ -22,12 +27,28 @@ function fetchCharacters(page = 1) {
   );
 }
 
+function sortByDate(list) {
+  // TODO: sort items by date here
+  return list;
+}
+
+function sortByEpisodes(list) {
+  // TODO: sort items by episodes here
+  return list;
+}
+
 /** renders the characters list to the DOM */
 function render(emptyBeforeRender = false) {
-  const list = items
-    .filter((item) =>
-      query ? item.name.toLowerCase().includes(query.toLowerCase()) : true
-    )
+  const sortedItemsByDate = sortByDate(items);
+  const sortedItemsByEpisodes = sortByEpisodes(sortedItemsByDate);
+
+  const list = sortedItemsByEpisodes
+    .filter((item) => {
+      const itemName = item.name.toLowerCase();
+      const queryString = query.toLowerCase();
+
+      return query ? itemName.includes(queryString) : true;
+    })
     .slice((page - 1) * 10, page * 10)
     .map(characterTemplate)
     .join('');
@@ -38,6 +59,7 @@ function render(emptyBeforeRender = false) {
   refs.charactersList.insertAdjacentHTML('beforeend', list);
 }
 
+/** show/hide the loader */
 function showLoader(show = false) {
   isLoading = show;
 
@@ -53,12 +75,12 @@ async function loadCharacters() {
   showLoader(true);
 
   await fetchCharacters().then(({ info, results }) => {
-    pages = info.pages;
+    totalPages = info.pages;
     items = results;
   });
 
   const fetches = [];
-  for (let i = 2; i <= pages; i += 1) {
+  for (let i = 2; i <= totalPages; i += 1) {
     fetches.push(fetchCharacters(i));
   }
 
@@ -84,7 +106,10 @@ function addCharacters() {
 
   if (isLoading) return;
 
-  if (refs.window.pageYOffset >= scrollHeight - clientHeight && page < pages) {
+  if (
+    refs.window.pageYOffset >= scrollHeight - clientHeight &&
+    page < totalPages
+  ) {
     page += 1;
     render();
   }
@@ -124,8 +149,21 @@ function handleCharacterClick({ target }) {
   }
 }
 
+/** set the search query value and rerender the page */
 function handleSearchInput(e) {
   query = e.target.value;
+  render(true);
+}
+
+/** set the Sort By Date value and rerender the page */
+function handleChangeSortByDate(e) {
+  sortByDateValue = e.target.value;
+  render(true);
+}
+
+/** set the Sort By Episode value and rerender the page */
+function handleChangeSortByEpisode(e) {
+  sortByEpisodeValue = e.target.value;
   render(true);
 }
 
@@ -134,6 +172,8 @@ refs.window.addEventListener('scroll', handleWindowScroll);
 refs.topButton.addEventListener('click', handleTopClick);
 refs.charactersList.addEventListener('click', handleCharacterClick);
 refs.inputSearch.addEventListener('input', handleSearchInput);
+refs.inputSortByDate.addEventListener('change', handleChangeSortByDate);
+refs.inputSortByEpisode.addEventListener('change', handleChangeSortByEpisode);
 
 // ------------------- run -----------------------
 loadCharacters();
