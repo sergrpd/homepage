@@ -27,14 +27,32 @@ function fetchCharacters(page = 1) {
   );
 }
 
+/** sort items by date */
 function sortByDate(list) {
-  // TODO: sort items by date here
-  return list;
+  if (!sortByDateValue) return list;
+
+  return [...list].sort((a, b) => {
+    const date1 = new Date(a.created).getTime();
+    const date2 = new Date(b.created).getTime();
+
+    return sortByDateValue === 'desc' ? date2 - date1 : date1 - date2;
+  });
 }
 
+/** sort items by episodes and date */
 function sortByEpisodes(list) {
-  // TODO: sort items by episodes here
-  return list;
+  if (!sortByEpisodeValue) return list;
+
+  return [...list].sort((a, b) => {
+    const date1 = new Date(a.created).getTime();
+    const date2 = new Date(b.created).getTime();
+    const value1 = a.episode.length;
+    const value2 = b.episode.length;
+
+    return sortByEpisodeValue === 'desc'
+      ? value2 - value1 || date1 - date2
+      : value1 - value2 || date1 - date2;
+  });
 }
 
 /** renders the characters list to the DOM */
