@@ -5,17 +5,36 @@ const refs = {
   charactersList: document.querySelector('.characters'),
   topButton: document.querySelector('.top-button'),
   loader: document.querySelector('.loader'),
+  inputSearch: document.querySelector('.search'),
 };
 
+let items = [];
+let query = '';
 let page = 1;
 let pages = 0;
 let isLoading = false;
 
 // -------------- functions ----------------
-/** renders the characters list to the DOM */
-function render(characters) {
-  const list = characters.map(characterTemplate).join('');
+/** fetch characters data from API */
+function fetchCharacters(page = 1) {
+  return fetch(`https://rickandmortyapi.com/api/character?page=${page}`).then(
+    (res) => res.json()
+  );
+}
 
+/** renders the characters list to the DOM */
+function render(emptyBeforeRender = false) {
+  const list = items
+    .filter((item) =>
+      query ? item.name.toLowerCase().includes(query.toLowerCase()) : true
+    )
+    .slice((page - 1) * 10, page * 10)
+    .map(characterTemplate)
+    .join('');
+
+  if (emptyBeforeRender) {
+    refs.charactersList.innerHTML = '';
+  }
   refs.charactersList.insertAdjacentHTML('beforeend', list);
 }
 
@@ -30,23 +49,24 @@ function showLoader(show = false) {
 }
 
 /** fetch the characters list from the API */
-function loadCharacters() {
+async function loadCharacters() {
   showLoader(true);
 
-  fetch(`https://rickandmortyapi.com/api/character?page=${Math.floor(page)}`)
-    .then((res) => res.json())
-    .then(({ info, results = [] }) => {
-      const fromIdx = Number.isInteger(page) ? 0 : 10;
-      const characters = results.slice(fromIdx, 10);
+  await fetchCharacters().then(({ info, results }) => {
+    pages = info.pages;
+    items = results;
+  });
 
-      pages = info.pages;
-      page += 0.5;
+  const fetches = [];
+  for (let i = 2; i <= pages; i += 1) {
+    fetches.push(fetchCharacters(i));
+  }
 
-      render(characters);
-    })
-    .finally(() => {
-      showLoader(false);
-    });
+  const data = await Promise.all(fetches);
+  data.forEach(({ results }) => items.push(...results));
+
+  render();
+  showLoader(false);
 }
 
 /** show/hide the topButton */
@@ -64,8 +84,9 @@ function addCharacters() {
 
   if (isLoading) return;
 
-  if (refs.window.pageYOffset >= scrollHeight - clientHeight) {
-    loadCharacters();
+  if (refs.window.pageYOffset >= scrollHeight - clientHeight && page < pages) {
+    page += 1;
+    render();
   }
 }
 
@@ -85,26 +106,34 @@ function handleTopClick() {
   refs.window.scrollTo({
     top: 0,
     left: 0,
-    behavior: 'smooth',
   });
+  page = 1;
+  render(true);
 }
 
 /** a callback function to call on Character Item click */
 function handleCharacterClick({ target }) {
   const { nodeName, dataset } = target;
 
-  // if it's a button then remove the item
+  // if it's a button then remove the item from the DOM and from the models
   if (nodeName === 'BUTTON') {
     const item = document.querySelector(`article[data-id="${dataset.id}"]`);
 
+    items = items.filter(({ id }) => id !== Number(dataset.id));
     item.remove();
   }
+}
+
+function handleSearchInput(e) {
+  query = e.target.value;
+  render(true);
 }
 
 // -------------- event listeners ----------------
 refs.window.addEventListener('scroll', handleWindowScroll);
 refs.topButton.addEventListener('click', handleTopClick);
 refs.charactersList.addEventListener('click', handleCharacterClick);
+refs.inputSearch.addEventListener('input', handleSearchInput);
 
 // ------------------- run -----------------------
 loadCharacters();
