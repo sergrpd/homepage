@@ -7,59 +7,66 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:wght@100;500&display=swap"
     />
-	<link
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
     <title>Binary Studio Homework | DOM API & Browser API</title>
   </head>
 
-<body>
-       <div class="outer">
-        <div class="header">
-           <center><a href="#"><img src="logo.png" alt="logo" width="50%" align="center" /></a></center>
-                <div class="sort-search">
-                    <div class="sort">
-                        <span>Sort by date:</span>
-                        <div id="sort_date">
-                            <select data-sort="date" class="input_field" id="sort_date">
-                                <option disabled selected value> </option>
-                                <option value="true">From new to old</option>
-                                <option value="false">From old to new</option>
-                            </select>
-                            <button onclick="sortingdate()" class="sort_button" type="button">
-                                Apply
-                            </button>
-                        </div>
-                    </div>
-                    <div class="sort">
-                        <span>Sort by episodes:</span>
-                        <div id="sort_episodes">
-                            <select data-sort="episodes" class="input_field" id="sort_episodes">
-                                <option disabled selected value> </option>
-                                <option value="true" >From min to max</option>
-                                <option value="false">From max to min</option>
-                            </select>
-                            <button onclick="sortingepisode()" class="sort_button" type="button">
-                                Apply
-                            </button>
-                        </div>
-                    </div>
-                    <div class="search">
-                        <span>Quick search:</span>
-                        <div>
-                            <input type="text" class="input_field" id="instant-search" placeholder="Search...">
-                        </div>
-                    </div>
-                </div>
-        </div>
+  <body>
+    <div class="outer">
+      <div class="header">
+        <a class="logo" href="#">
+          <img src="./logo.png" alt="logo" />
+        </a>
 
-        <div class="title">Characters</div>
-        <button onclick="goToTop()" id="topButton" title="Jump to top">Top</button>
-        <div class="characters"></div>
+        <div class="toolbar">
+          <div class="filter">
+            <span>Sort by date:</span>
+
+            <div>
+              <select data-sort="date" class="input_field">
+                <option disabled selected value>--</option>
+                <option value="true">From new to old</option>
+                <option value="false">From old to new</option>
+              </select>
+
+              <button class="sort_button" type="button">Apply</button>
+            </div>
+          </div>
+
+          <div class="filter">
+            <span>Sort by episodes:</span>
+
+            <div>
+              <select data-sort="episodes" class="input_field">
+                <option disabled selected value>--</option>
+                <option value="true">From min to max</option>
+                <option value="false">From max to min</option>
+              </select>
+
+              <button class="sort_button" type="button">Apply</button>
+            </div>
+          </div>
+
+          <div class="filter">
+            <span>Quick search:</span>
+
+            <div>
+              <input type="text" class="input_field" placeholder="Search..." />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="title">Characters</div>
+      <div class="characters"></div>
+      <div class="loader">loading...</div>
+      <button class="top-button" title="Jump to top">Top &#8593;</button>
     </div>
-		
-    <script src="scripts.js"></script>
-</body>
+
+    <script src="./index.js" type="module"></script>
+  </body>
 </html>
